@@ -242,16 +242,18 @@ export default function Navbar() {
                 {SERVICES.map((s) => (
                   <Link
                     key={s.name}
-                    to={`/#${s.name.toLowerCase().replace(/\s+/g, "-")}`}
+                    to={s.path}
                     className="py-2.5 text-[14px] text-[#6B7280]"
-                    onClick={() => setMobileOpen(false)}
+                    onClick={() => {
+                      setMobileServicesOpen(false);
+                      setMobileOpen(false);
+                    }}
                   >
                     {s.name}
                   </Link>
                 ))}
               </div>
             )}
-
             <Link
               to="/projects"
               className="py-3 text-[15px] font-medium text-[#0F172A] border-b border-[#E7E9EE]"
