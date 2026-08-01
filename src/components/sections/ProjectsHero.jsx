@@ -61,12 +61,10 @@ export default function ProjectsHero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-8 flex flex-wrap items-center gap-6"
           >
-            <Link to="/projects">
-              <PrimaryButton>
-                View All Projects
-                <ArrowUpRight size={17} />
-              </PrimaryButton>
-            </Link>
+            <PrimaryButton to="/projects">
+              View All Projects
+              <ArrowUpRight size={17} />
+            </PrimaryButton>
             <div className="text-[14px] text-[#475569]">
               <span className="text-[20px] font-extrabold text-[#0F172A]">
                 {count}+

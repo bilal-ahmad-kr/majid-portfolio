@@ -150,7 +150,7 @@ export function usePublishedProjects({ serviceId, category, limit } = {}) {
 
   useEffect(() => {
     projectsService
-      .listPublished({ serviceId, limit })
+      .listFiltered({ serviceId, limit, onlyPublished: true })
       .then((data) => {
         if (category && category !== "All") {
           setProjects(data.filter((p) => p.category === category));

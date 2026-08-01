@@ -144,7 +144,6 @@ export const blogsService = {
     if (error) throw error;
     return data;
   },
-
   /** Fetch blog by slug. */
   async getBySlug(slug) {
     const { data, error } = await supabase

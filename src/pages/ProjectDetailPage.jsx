@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, TrendingUp, Check } from "lucide-react";
 import { projectsService } from "../lib/cms";
-import { SectionEyebrow, PrimaryButton } from "../components/ui/Shared";
+import { PrimaryButton } from "../components/ui/Shared";
 
 function Skeleton() {
   return (
@@ -47,15 +47,31 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
-    setLoading(true);
-    setNotFound(false);
+
+    let ignore = false;
+
+    queueMicrotask(() => {
+      if (ignore) return;
+      setLoading(true);
+      setNotFound(false);
+    });
+
     projectsService
       .getBySlugWithRelated(slug)
-      .then(setProject)
-      .catch((err) => {
-        if (err?.code === "PGRST116") setNotFound(true);
+      .then((data) => {
+        if (ignore) return;
+        setProject(data);
+        setLoading(false);
       })
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (ignore) return;
+        if (err?.code === "PGRST116") setNotFound(true);
+        setLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [slug]);
 
   if (loading) return <Skeleton />;
