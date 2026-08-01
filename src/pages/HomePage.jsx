@@ -1,20 +1,16 @@
-import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import TestimonialAndGallery from "../components/TestimonialAndGallery";
-import MarqueeStrip from "../components/MarqueeStrip";
-import WhyUs from "../components/WhyUs";
-import Services from "../components/Services";
-import Portfolio from "../components/Portfolio";
-import TestimonialsWall from "../components/TestimonialsWall";
-import FAQ from "../components/FAQ";
-import Articles from "../components/Articles";
-import Contact from "../components/Contact";
-import Footer from "../components/Footer";
+import Hero from "../components/sections/Hero";
+import TestimonialAndGallery from "../components/sections/TestimonialAndGallery";
+import MarqueeStrip from "../components/ui/MarqueeStrip";
+import WhyUs from "../components/sections/WhyUs";
+import Services from "../components/sections/Services";
+import Portfolio from "../components/ui/Portfolio";
+import TestimonialsWall from "../components/sections/TestimonialsWall";
+import FAQ from "../components/ui/FAQ";
+import Articles from "../components/sections/Articles";
 
 export default function HomePage() {
   return (
     <div className="font-sans antialiased">
-      <Navbar />
       <Hero />
       <TestimonialAndGallery />
       <MarqueeStrip />
@@ -24,8 +20,6 @@ export default function HomePage() {
       <TestimonialsWall />
       <FAQ />
       <Articles />
-      <Contact />
-      <Footer />
     </div>
   );
 }
