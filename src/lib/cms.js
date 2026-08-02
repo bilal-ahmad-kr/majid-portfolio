@@ -7,8 +7,15 @@ import { supabase } from "./supabase";
  */
 function createCrudService(table) {
   return {
-    async list({ orderBy = "created_at", ascending = false, onlyPublished = false } = {}) {
-      let query = supabase.from(table).select("*").order(orderBy, { ascending });
+    async list({
+      orderBy = "created_at",
+      ascending = false,
+      onlyPublished = false,
+    } = {}) {
+      let query = supabase
+        .from(table)
+        .select("*")
+        .order(orderBy, { ascending });
       if (onlyPublished) query = query.eq("published", true);
       const { data, error } = await query;
       if (error) throw error;
@@ -16,30 +23,47 @@ function createCrudService(table) {
     },
 
     async getById(id) {
-      const { data, error } = await supabase.from(table).select("*").eq("id", id).single();
+      const { data, error } = await supabase
+        .from(table)
+        .select("*")
+        .eq("id", id)
+        .single();
       if (error) throw error;
       return data;
     },
 
     async getBySlug(slug) {
-      const { data, error } = await supabase.from(table).select("*").eq("slug", slug).single();
+      const { data, error } = await supabase
+        .from(table)
+        .select("*")
+        .eq("slug", slug)
+        .single();
       if (error) throw error;
       return data;
     },
 
     async create(values) {
-      const { data, error } = await supabase.from(table).insert(values).select().single();
+      const { data, error } = await supabase
+        .from(table)
+        .insert(values)
+        .select()
+        .single();
       if (error) throw error;
       return data;
     },
 
-    async update(id, values) {
+    async update(slug, values) {
       const { data, error } = await supabase
-        .from(table)
-        .update(values)
-        .eq("id", id)
+        .from("pages")
+        .upsert(
+          { slug, ...values },
+          {
+            onConflict: "slug",
+          },
+        )
         .select()
         .single();
+
       if (error) throw error;
       return data;
     },
@@ -97,15 +121,20 @@ export const projectsService = {
    * Generic filtered list — pass any combination of serviceId, category,
    * featured, or published to narrow results.  Used by AllProjects.jsx.
    */
-  async listFiltered({ serviceId, category, featured, onlyPublished = true } = {}) {
+  async listFiltered({
+    serviceId,
+    category,
+    featured,
+    onlyPublished = true,
+  } = {}) {
     let query = supabase
       .from("projects")
       .select("*, services(title, slug)")
       .order("sort_order", { ascending: true });
 
     if (onlyPublished) query = query.eq("published", true);
-    if (serviceId)     query = query.eq("service_id", serviceId);
-    if (category)      query = query.eq("category", category);
+    if (serviceId) query = query.eq("service_id", serviceId);
+    if (category) query = query.eq("category", category);
     if (featured != null) query = query.eq("featured", featured);
 
     const { data, error } = await query;
@@ -139,7 +168,7 @@ export const blogsService = {
       .eq("published", true)
       .order("published_at", { ascending: false });
     if (serviceId) query = query.eq("service_id", serviceId);
-    if (limit)     query = query.limit(limit);
+    if (limit) query = query.limit(limit);
     const { data, error } = await query;
     if (error) throw error;
     return data;
@@ -254,7 +283,7 @@ export const faqsService = {
       .select("*")
       .eq("published", true)
       .order("sort_order", { ascending: true });
-    if (section)   query = query.eq("section", section);
+    if (section) query = query.eq("section", section);
     if (serviceId) query = query.eq("service_id", serviceId);
     const { data, error } = await query;
     if (error) throw error;
@@ -315,7 +344,11 @@ export const categoriesService = {
 // ─────────────────────────────────────────────────────────────
 export const pagesService = {
   async get(slug) {
-    const { data, error } = await supabase.from("pages").select("*").eq("slug", slug).single();
+    const { data, error } = await supabase
+      .from("pages")
+      .select("*")
+      .eq("slug", slug)
+      .single();
     if (error && error.code !== "PGRST116") throw error;
     return data || { slug, content: {} };
   },
@@ -335,7 +368,11 @@ export const pagesService = {
 // ─────────────────────────────────────────────────────────────
 export const settingsService = {
   async get(key) {
-    const { data, error } = await supabase.from("settings").select("*").eq("key", key).single();
+    const { data, error } = await supabase
+      .from("settings")
+      .select("*")
+      .eq("key", key)
+      .single();
     if (error && error.code !== "PGRST116") throw error;
     return data?.value ?? null;
   },
@@ -363,7 +400,9 @@ export const mediaService = {
       .upload(path, file, { cacheControl: "3600", upsert: false });
     if (uploadError) throw uploadError;
 
-    const { data: publicUrlData } = supabase.storage.from("site-media").getPublicUrl(path);
+    const { data: publicUrlData } = supabase.storage
+      .from("site-media")
+      .getPublicUrl(path);
     const url = publicUrlData.publicUrl;
 
     const { data: mediaRow, error: dbError } = await supabase

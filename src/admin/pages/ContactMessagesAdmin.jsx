@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Trash2, Mail, MailOpen, Save } from "lucide-react";
 import { contactMessagesService } from "../../lib/cms";
 import { useCrudList } from "../../hooks/useCrud";
