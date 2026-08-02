@@ -51,21 +51,22 @@ function createCrudService(table) {
       if (error) throw error;
       return data;
     },
-    async update(slug, values) {
-  console.log("Updating slug:", slug);
-  console.log("Values:", values);
 
-  const result = await supabase
-    .from("pages")
-    .update(values)
-    .eq("slug", slug)
-    .select();
-
-  console.log(result);
-
-  if (result.error) throw result.error;
-  return result.data[0];
-},
+    // Fixed: this was hardcoded to `.from("pages")` / `.eq("slug", slug)`
+    // regardless of which table the factory was built for, which meant
+    // every service built on this factory (projects, blogs, testimonials,
+    // faqs, contact_messages, categories) was silently updating `pages`
+    // instead of its own table. Now correctly scoped to `table` and `id`.
+    async update(id, values) {
+      const { data, error } = await supabase
+        .from(table)
+        .update(values)
+        .eq("id", id)
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
 
     async remove(id) {
       const { error } = await supabase.from(table).delete().eq("id", id);
@@ -172,6 +173,7 @@ export const blogsService = {
     if (error) throw error;
     return data;
   },
+
   /** Fetch blog by slug. */
   async getBySlug(slug) {
     const { data, error } = await supabase
@@ -339,7 +341,7 @@ export const categoriesService = {
 };
 
 // ─────────────────────────────────────────────────────────────
-// Pages Service (Home/About) — single-row-per-key
+// Pages Service (Home/About) — single-row-per-slug
 // ─────────────────────────────────────────────────────────────
 export const pagesService = {
   async get(slug) {
@@ -351,10 +353,16 @@ export const pagesService = {
     if (error && error.code !== "PGRST116") throw error;
     return data || { slug, content: {} };
   },
+
+  // Fixed: upsert() with no `onConflict` resolves against the table's
+  // PRIMARY KEY (id), not `slug`. Since no id is passed, Postgres generated
+  // a fresh id and tried to INSERT a new row — colliding with the existing
+  // row's slug and throwing "duplicate key value violates unique
+  // constraint pages_slug_key". Explicitly targeting `slug` fixes it.
   async update(slug, values) {
     const { data, error } = await supabase
       .from("pages")
-      .upsert({ slug, ...values })
+      .upsert({ slug, ...values }, { onConflict: "slug" })
       .select()
       .single();
     if (error) throw error;
@@ -378,7 +386,7 @@ export const settingsService = {
   async set(key, value) {
     const { data, error } = await supabase
       .from("settings")
-      .upsert({ key, value, updated_at: new Date().toISOString() })
+      .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" })
       .select()
       .single();
     if (error) throw error;
