@@ -51,22 +51,21 @@ function createCrudService(table) {
       if (error) throw error;
       return data;
     },
-
     async update(slug, values) {
-      const { data, error } = await supabase
-        .from("pages")
-        .upsert(
-          { slug, ...values },
-          {
-            onConflict: "slug",
-          },
-        )
-        .select()
-        .single();
+  console.log("Updating slug:", slug);
+  console.log("Values:", values);
 
-      if (error) throw error;
-      return data;
-    },
+  const result = await supabase
+    .from("pages")
+    .update(values)
+    .eq("slug", slug)
+    .select();
+
+  console.log(result);
+
+  if (result.error) throw result.error;
+  return result.data[0];
+},
 
     async remove(id) {
       const { error } = await supabase.from(table).delete().eq("id", id);
