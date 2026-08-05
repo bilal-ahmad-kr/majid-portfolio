@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { SectionEyebrow } from "../ui/Shared";
+import * as LucideIcons from "lucide-react";
 
 export default function ServiceProcess({ steps }) {
   return (
@@ -11,8 +12,8 @@ export default function ServiceProcess({ steps }) {
             How We Work
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[15px] text-[#475569] md:text-[16.5px]">
-            A simple, transparent process from first conversation to
-            long-term support.
+            A simple, transparent process from first conversation to long-term
+            support.
           </p>
         </div>
 
@@ -20,7 +21,11 @@ export default function ServiceProcess({ steps }) {
           <div className="pointer-events-none absolute top-[52px] left-0 right-0 hidden h-px bg-slate-200 lg:block" />
 
           {steps.map((s, i) => {
-            const Icon = s.icon;
+            const Icon =
+              s.icon && LucideIcons[s.icon]
+                ? LucideIcons[s.icon]
+                : LucideIcons.Circle;
+
             return (
               <motion.div
                 key={s.title}
@@ -28,16 +33,21 @@ export default function ServiceProcess({ steps }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="group relative rounded-2xl border border-slate-100 bg-white p-7 text-left transition-all hover:-translate-y-1.5 hover:border-transparent hover:shadow-[0_20px_40px_-16px_rgba(30,91,255,0.3)]"
+                className="group relative rounded-2xl border border-slate-100 bg-white p-7"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#1E5BFF] to-[#0B3FA0] shadow-[0_10px_20px_-6px_rgba(30,91,255,0.55)] transition-transform duration-300 group-hover:scale-110">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#1E5BFF] to-[#0B3FA0]">
                     <Icon size={22} className="text-white" />
                   </span>
-                  <span className="text-[26px] font-extrabold text-slate-200">{s.step}</span>
+
+                  <span className="text-[26px] font-extrabold text-slate-200">
+                    {s.step}
+                  </span>
                 </div>
-                <h3 className="mt-5 text-[17px] font-bold text-[#0F172A]">{s.title}</h3>
-                <p className="mt-2.5 text-[14px] leading-relaxed text-[#475569]">{s.desc}</p>
+
+                <h3 className="mt-5 text-[17px] font-bold">{s.title}</h3>
+
+                <p className="mt-2.5 text-[14px]">{s.desc}</p>
               </motion.div>
             );
           })}

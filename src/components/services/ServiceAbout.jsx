@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { SectionEyebrow } from "../ui/Shared";
 
+
 export default function ServiceAbout({ heading, paragraph, image }) {
   return (
     <section className="bg-white px-5 py-20 md:py-28">

@@ -15,6 +15,9 @@ import { supabase } from "../../lib/supabase";
 // (see data/servicesContent.js). Reused by all 4 /services/* routes
 // so every page stays structurally and visually identical.
 export default function ServicePageTemplate({ data, serviceSlug }) {
+
+  console.log("Service Data:", data);
+
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {

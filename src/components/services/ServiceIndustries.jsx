@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { SectionEyebrow } from "../ui/Shared";
+import * as LucideIcons from "lucide-react";
 
 export default function ServiceIndustries({ industries }) {
   return (
@@ -10,13 +11,14 @@ export default function ServiceIndustries({ industries }) {
           Industries We Serve
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-[15px] text-[#475569] md:text-[16.5px]">
-          Our systems adapt to most service-based businesses, with the
-          deepest experience in these industries.
+          Our systems adapt to most service-based businesses, with the deepest
+          experience in these industries.
         </p>
 
         <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
           {industries.map((ind, i) => {
-            const Icon = ind.icon;
+            const Icon = LucideIcons[ind.icon] || LucideIcons.Building2;
+
             return (
               <motion.div
                 key={ind.label}
@@ -29,7 +31,10 @@ export default function ServiceIndustries({ industries }) {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1E5BFF]/10 text-[#1E5BFF] transition-transform duration-300 group-hover:scale-110">
                   <Icon size={20} />
                 </span>
-                <span className="text-[13px] font-semibold text-[#0F172A]">{ind.label}</span>
+
+                <span className="text-[13px] font-semibold text-[#0F172A]">
+                  {ind.label}
+                </span>
               </motion.div>
             );
           })}

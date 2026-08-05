@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { SectionEyebrow } from "../ui/Shared";
+import * as LucideIcons from "lucide-react";
 
 export default function ServiceFeatures({ features }) {
   return (
@@ -18,7 +19,7 @@ export default function ServiceFeatures({ features }) {
 
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f, i) => {
-            const Icon = f.icon;
+            const Icon = LucideIcons[f.icon] || LucideIcons.CheckCircle;
             return (
               <motion.div
                 key={f.title}

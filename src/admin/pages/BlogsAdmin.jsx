@@ -30,16 +30,12 @@ export default function BlogsAdmin() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
-  
+
   // Fetch services for dropdown
   const [services, setServices] = useState([]);
-  import("react").then(({ useEffect }) => {
-    useEffect(() => {
-      import("../../lib/cms").then(({ servicesService }) => {
-        servicesService.list().then(setServices).catch(console.error);
-      });
-    }, []);
-  });
+  useEffect(() => {
+    servicesService.list().then(setServices).catch(console.error);
+  }, []);
 
   function openNew() {
     setForm(EMPTY);
