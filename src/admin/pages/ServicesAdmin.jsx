@@ -209,17 +209,17 @@ function ServiceEditor({ service, onSave, onBack, onDelete }) {
             onChange={(v) => setForm({ ...form, hero_image_url: v })}
             folder="services"
           />
-          <ImageUploader
-            label="Benefits Image"
-            value={form.benefits_image_url}
+          <Field
+            label="Benefits Image URL"
+            value={form.benefits_image_url || ""}
             onChange={(v) =>
               setForm({
                 ...form,
                 benefits_image_url: v,
               })
             }
-            folder="services"
           />
+          `
         </Section>
 
         {/* Description */}
